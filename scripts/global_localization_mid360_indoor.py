@@ -44,7 +44,7 @@ def registration_at_scale(pc_scan, pc_map, initial, scale):
         voxel_down_sample(pc_scan, SCAN_VOXEL_SIZE * scale), voxel_down_sample(pc_map, MAP_VOXEL_SIZE * scale),
         1.0 * scale, initial,
         o3d.pipelines.registration.TransformationEstimationPointToPoint(),
-        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=20)
+        o3d.pipelines.registration.ICPConvergenceCriteria(max_iteration=100)
     )
 
     return result_icp.transformation, result_icp.fitness
@@ -208,8 +208,8 @@ def thread_localization():
 
 
 if __name__ == '__main__':
-    MAP_VOXEL_SIZE = 0.4
-    SCAN_VOXEL_SIZE = 0.1
+    MAP_VOXEL_SIZE = 0.1
+    SCAN_VOXEL_SIZE = 0.05
 
     # Global localization frequency (HZ)
     FREQ_LOCALIZATION = 0.5
@@ -219,10 +219,10 @@ if __name__ == '__main__':
     LOCALIZATION_TH = 0.95
 
     # FOV(rad), modify this according to your LiDAR type
-    FOV = 1.6
+    FOV = 6.28
 
     # The farthest distance(meters) within FOV
-    FOV_FAR = 150
+    FOV_FAR = 15  # or 30
 
     rospy.init_node('fast_lio_localization')
     rospy.loginfo('Localization Node Inited...')

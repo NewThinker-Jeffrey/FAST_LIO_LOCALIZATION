@@ -18,10 +18,10 @@
 
 	<arg name="map" default="" />
 	<!-- loalization-->
-    <node pkg="fast_lio_localization" type="global_localization.py" name="global_localization" output="screen" />
+    <node pkg="fast_lio_localization" type="global_localization_mid360_indoor.py" name="global_localization_mid360_indoor" output="screen" />
 
 	<!-- transform  fusion-->
-    <node pkg="fast_lio_localization" type="transform_fusion.py" name="transform_fusion" output="screen" />
+    <!-- <node pkg="fast_lio_localization" type="transform_fusion.py" name="transform_fusion" output="screen" /> -->
 
 	<!-- glbal map-->
     <node pkg="pcl_ros" type="pcd_to_pointcloud" name="map_publishe" output="screen"
