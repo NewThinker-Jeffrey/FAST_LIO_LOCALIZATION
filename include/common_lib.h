@@ -31,6 +31,21 @@ using namespace Eigen;
 #define CONSTRAIN(v,min,max)     ((v>min)?((v<max)?v:max):min)
 #define ARRAY_FROM_EIGEN(mat)    mat.data(), mat.data() + mat.rows() * mat.cols()
 #define STD_VEC_FROM_EIGEN(mat)  vector<decltype(mat)::Scalar> (mat.data(), mat.data() + mat.rows() * mat.cols())
+
+inline std::string __get_root_dir() {
+    char* p = getenv("FAST_LIO_LOC_ROOT");
+    if (p == NULL) {
+        return string(DEFAULT_FAST_LIO_LOC_ROOT);
+    }
+    return string(p) + "/";
+}
+
+inline std::string get_root_dir() {
+    static std::string root_dir = __get_root_dir();
+    return root_dir;
+}
+
+#define ROOT_DIR get_root_dir()
 #define DEBUG_FILE_DIR(name)     (string(string(ROOT_DIR) + "Log/"+ name))
 
 typedef fast_lio::Pose6D Pose6D;
