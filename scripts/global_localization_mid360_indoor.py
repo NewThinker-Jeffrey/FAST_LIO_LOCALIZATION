@@ -149,6 +149,17 @@ def global_localization(pose_estimation):
         map_to_odom.header.stamp = cur_odom.header.stamp
         map_to_odom.header.frame_id = 'map'
         pub_map_to_odom.publish(map_to_odom)
+
+        # pub_map_to_lidar = rospy.Publisher('/map_to_lidar', PoseStamped, queue_size=1)
+        map_to_lidar = PoseStamped()
+        T_map_to_lidar = pose_to_mat(map_to_odom) * pose_to_mat(cur_odom)
+        xyz = tf.transformations.translation_from_matrix(T_map_to_lidar)
+        quat = tf.transformations.quaternion_from_matrix(T_map_to_lidar)
+        map_to_lidar.pose = Pose(Point(*xyz), Quaternion(*quat))
+        map_to_lidar.header.stamp = cur_odom.header.stamp
+        map_to_lidar.header.frame_id = 'map'
+        pub_map_to_lidar.publish(map_to_lidar)
+
         return True
     else:
         rospy.logwarn('Not match!!!!')
@@ -231,6 +242,7 @@ if __name__ == '__main__':
     pub_pc_in_map = rospy.Publisher('/cur_scan_in_map', PointCloud2, queue_size=1)
     pub_submap = rospy.Publisher('/submap', PointCloud2, queue_size=1)
     pub_map_to_odom = rospy.Publisher('/map_to_odom', Odometry, queue_size=1)
+    pub_map_to_lidar = rospy.Publisher('/map_to_lidar', PoseStamped, queue_size=1)
 
     rospy.Subscriber('/cloud_registered', PointCloud2, cb_save_cur_scan, queue_size=1)
     rospy.Subscriber('/Odometry', Odometry, cb_save_cur_odom, queue_size=1)
