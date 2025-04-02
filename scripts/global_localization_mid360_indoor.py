@@ -9,7 +9,7 @@ import time
 import open3d as o3d
 import rospy
 import ros_numpy
-from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion
+from geometry_msgs.msg import PoseWithCovarianceStamped, Pose, Point, Quaternion, PoseStamped
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import PointCloud2
 import numpy as np
@@ -152,7 +152,9 @@ def global_localization(pose_estimation):
 
         # pub_map_to_lidar = rospy.Publisher('/map_to_lidar', PoseStamped, queue_size=1)
         map_to_lidar = PoseStamped()
-        T_map_to_lidar = pose_to_mat(map_to_odom) * pose_to_mat(cur_odom)
+        T_map_to_lidar = np.matmul(pose_to_mat(map_to_odom), pose_to_mat(cur_odom))
+        print("T_map_to_lidar:")
+        print(T_map_to_lidar)
         xyz = tf.transformations.translation_from_matrix(T_map_to_lidar)
         quat = tf.transformations.quaternion_from_matrix(T_map_to_lidar)
         map_to_lidar.pose = Pose(Point(*xyz), Quaternion(*quat))
@@ -223,7 +225,7 @@ if __name__ == '__main__':
     SCAN_VOXEL_SIZE = 0.05
 
     # Global localization frequency (HZ)
-    FREQ_LOCALIZATION = 0.5
+    FREQ_LOCALIZATION = 3.0
 
     # The threshold of global localization,
     # only those scan2map-matching with higher fitness than LOCALIZATION_TH will be taken

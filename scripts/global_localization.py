@@ -152,7 +152,7 @@ def global_localization(pose_estimation):
 
         # pub_map_to_lidar = rospy.Publisher('/map_to_lidar', PoseStamped, queue_size=1)
         map_to_lidar = PoseStamped()
-        T_map_to_lidar = pose_to_mat(map_to_odom) * pose_to_mat(cur_odom)
+        T_map_to_lidar = np.matmul(pose_to_mat(map_to_odom), pose_to_mat(cur_odom))
         xyz = tf.transformations.translation_from_matrix(T_map_to_lidar)
         quat = tf.transformations.quaternion_from_matrix(T_map_to_lidar)
         map_to_lidar.pose = Pose(Point(*xyz), Quaternion(*quat))
